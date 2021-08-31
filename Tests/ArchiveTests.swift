@@ -14,7 +14,7 @@ final class ArchiveTests: XCTestCase {
     
     func testAvailable() {
         XCTAssertTrue(archive.available)
-        archive.secrets = [.init()]
+        archive.secrets = [.new]
         XCTAssertFalse(archive.available)
     }
 }
