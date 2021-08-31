@@ -1,4 +1,4 @@
-public enum Tag: CaseIterable {
+public enum Tag: UInt8, CaseIterable {
     case
     home,
     office,

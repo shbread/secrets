@@ -2,6 +2,7 @@ import Foundation
 import Archivable
 
 public struct Archive: Arch {
+    public static let version = UInt8()
     public static let new = Self()
     public var timestamp: UInt32
     public internal(set) var secrets: [Secret]
@@ -12,8 +13,11 @@ public struct Archive: Arch {
     }
     
     public var data: Data {
-        get {
-            .init()
+        get async {
+            await .init()
+                .adding(UInt16(capacity))
+                .adding(UInt16(secrets.count))
+                .adding(secrets.flatMap(\.data))
         }
     }
     
@@ -23,9 +27,13 @@ public struct Archive: Arch {
         capacity = 1
     }
     
-    public init(data: inout Data) async {
-        timestamp = .now
+    public init(version: UInt8, timestamp: UInt32, data: inout Data) async {
+        self.timestamp = timestamp
         secrets = []
-        capacity = 1
+        capacity = .init(data.uInt16())
+        secrets = (0 ..< .init(data.uInt16()))
+            .map { _ in
+                .init(data: &data)
+            }
     }
 }
