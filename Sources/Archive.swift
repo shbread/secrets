@@ -23,7 +23,7 @@ public struct Archive: Arch {
     }
     
     private init() {
-        timestamp = .now
+        timestamp = 0
         secrets = []
         capacity = 1
     }
