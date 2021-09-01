@@ -8,7 +8,7 @@ extension Data {
         get async {
             await Task
                 .detached(priority: .utility) {
-                    key
+                    (retrieve ?? generate)
                         .flatMap { key in
                             try? AES.GCM.seal(self, using: key).combined
                         }
@@ -22,7 +22,7 @@ extension Data {
         get async {
             await Task
                 .detached(priority: .utility) {
-                    key
+                    retrieve
                         .flatMap { key in
                             (try? AES.GCM.SealedBox(combined: self))
                                 .flatMap {
@@ -33,10 +33,6 @@ extension Data {
                 }
                 .value
         }
-    }
-    
-    private var key: SymmetricKey? {
-        retrieve ?? generate
     }
     
     private var retrieve: SymmetricKey? {
