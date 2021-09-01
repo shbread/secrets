@@ -2,9 +2,11 @@ import Archivable
 
 extension Cloud where A == Archive {
     public static var new: Self {
-        get async {
-            await .init(container: .init(name: "iCloud.shortbread"))
+        let cloud = Self()
+        Task {
+            await cloud.load(container: .init(name: "iCloud.shortbread"))
         }
+        return cloud
     }
     
     public func new(secret: String) async -> Int {
