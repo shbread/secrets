@@ -4,17 +4,35 @@ import CryptoKit
 private let label = "archive"
 
 extension Data {
-    public var compressed: Self {
+    public var encrypted: Self {
         get async {
             await Task
                 .detached(priority: .utility) {
-                    try! (self as NSData).compressed(using: .lzfse) as Self
+                    key
+                        .flatMap { key in
+                            try? AES.GCM.seal(self, using: key).combined
+                        }
+                    ?? .init()
                 }
                 .value
         }
     }
     
-    private var key: SymmetricKey{
+    public var decrypted: Self {
+        get async {
+            await Task
+                .detached(priority: .utility) {
+                    key
+                        .flatMap { key in
+                            try? AES.GCM.seal(self, using: key).combined
+                        }
+                    ?? .init()
+                }
+                .value
+        }
+    }
+    
+    private var key: SymmetricKey? {
         retrieve ?? generate
     }
     
@@ -35,24 +53,27 @@ extension Data {
         return .init(data: data)
     }
     
-    private var generate: SymmetricKey {
+    private var generate: SymmetricKey? {
         let key = SymmetricKey(size: .bits256)
 
-        SecItemAdd([
-            kSecClass: kSecClassKey,
-            kSecAttrApplicationLabel: label,
-            kSecAttrAccessible: kSecAttrAccessibleWhenUnlocked,
-            kSecUseDataProtectionKeychain: true,
-            kSecValueRef:
-                SecKeyCreateWithData(key
-                                        .withUnsafeBytes {
-                                            Data($0)
-                                        } as CFData,
-                                               ([kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
-                                                kSecAttrKeyClass: kSecAttrKeyClassPrivate]
-                                                as [String: Any]) as CFDictionary,
-                                               nil)!]
-                   as [String: Any] as CFDictionary, nil)
+        guard
+            let query = SecKeyCreateWithData(
+                key
+                    .withUnsafeBytes {
+                        Data($0)
+                    } as CFData,
+                ([kSecAttrKeyType: kSecAttrKeyTypeECSECPrimeRandom,
+                 kSecAttrKeyClass: kSecAttrKeyClassPrivate]
+                 as [String: Any]) as CFDictionary,
+                nil),
+            SecItemAdd([
+                kSecClass: kSecClassKey,
+                kSecAttrApplicationLabel: label,
+                kSecAttrAccessible: kSecAttrAccessibleWhenUnlocked,
+                kSecUseDataProtectionKeychain: true,
+                kSecValueRef: query]
+                       as [String: Any] as CFDictionary, nil) == errSecSuccess
+        else { return nil }
         
         return key
     }
