@@ -18,6 +18,7 @@ public struct Archive: Arch {
                 .adding(UInt16(capacity))
                 .adding(UInt16(secrets.count))
                 .adding(secrets.flatMap(\.data))
+                .encrypted
         }
     }
     
@@ -27,7 +28,8 @@ public struct Archive: Arch {
         capacity = 1
     }
     
-    public init(version: UInt8, timestamp: UInt32, data: inout Data) async {
+    public init(version: UInt8, timestamp: UInt32, data: Data) async {
+        var data = await data.decrypted
         self.timestamp = timestamp
         secrets = []
         capacity = .init(data.uInt16())
