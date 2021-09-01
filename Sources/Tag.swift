@@ -1,4 +1,4 @@
-public enum Tag: UInt8, CaseIterable {
+public enum Tag: UInt8, CaseIterable, Comparable {
     case
     home,
     office,
@@ -27,4 +27,8 @@ public enum Tag: UInt8, CaseIterable {
     passwords,
     numbers,
     keys
+    
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        "\(lhs)".localizedCompare("\(rhs)") == .orderedAscending
+    }
 }
