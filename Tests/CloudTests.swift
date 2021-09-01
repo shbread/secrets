@@ -40,6 +40,23 @@ final class CloudTests: XCTestCase {
         await waitForExpectations(timeout: 1)
     }
     
+    func testDelete() async {
+        let expect = expectation(description: "")
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink {
+                XCTAssertTrue($0.secrets.isEmpty)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.delete(index: 0)
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
     func testUpdateName() async {
         let expect = expectation(description: "")
         _ = await cloud.new(secret: "hello world")

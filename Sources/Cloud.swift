@@ -19,6 +19,13 @@ extension Cloud where A == Archive {
         return arch.secrets.count - 1
     }
     
+    public func delete(index: Int) async {
+        arch
+            .secrets
+            .remove(at: index)
+        await stream()
+    }
+    
     public func update(index: Int, name: String) async {
         arch
             .secrets
