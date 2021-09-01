@@ -43,18 +43,86 @@ final class CloudTests: XCTestCase {
     func testUpdateName() async {
         let expect = expectation(description: "")
         _ = await cloud.new(secret: "hello world")
-        let date = Date()
         
         cloud
             .archive
             .sink {
                 XCTAssertEqual("lorem ipsum", $0.secrets.first?.name)
-                XCTAssertGreaterThanOrEqual($0.secrets.last?.date.timestamp ?? 0, date.timestamp)
                 expect.fulfill()
             }
             .store(in: &subs)
         
         await cloud.update(index: 0, name: "lorem ipsum")
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
+    func testUpdatePayload() async {
+        let expect = expectation(description: "")
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink {
+                XCTAssertEqual("lorem ipsum", $0.secrets.first?.payload)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.update(index: 0, payload: "lorem ipsum")
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
+    func testUpdateFavourite() async {
+        let expect = expectation(description: "")
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink {
+                XCTAssertTrue($0.secrets.first?.favourite ?? false)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.update(index: 0, favourite: true)
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
+    func testAddTag() async {
+        let expect = expectation(description: "")
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink {
+                XCTAssertTrue($0.secrets.first?.tags.contains(.books) ?? false)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.add(index: 0, tag: .books)
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
+    func testRemoveTag() async {
+        let expect = expectation(description: "")
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .dropFirst()
+            .sink {
+                XCTAssertFalse($0.secrets.first?.tags.contains(.books) ?? true)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.add(index: 0, tag: .books)
+        await cloud.remove(index: 0, tag: .books)
         
         await waitForExpectations(timeout: 1)
     }

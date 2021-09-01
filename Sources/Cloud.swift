@@ -25,4 +25,44 @@ extension Cloud where A == Archive {
             }
         await stream()
     }
+    
+    public func update(index: Int, payload: String) async {
+        arch
+            .secrets
+            .mutate(index: index) {
+                $0.with(payload: payload)
+            }
+        await stream()
+    }
+    
+    public func update(index: Int, favourite: Bool) async {
+        arch
+            .secrets
+            .mutate(index: index) {
+                $0.with(favourite: favourite)
+            }
+        await stream()
+    }
+    
+    public func add(index: Int, tag: Tag) async {
+        arch
+            .secrets
+            .mutate(index: index) {
+                $0.with(tags: $0
+                            .tags
+                            .inserting(tag))
+            }
+        await stream()
+    }
+    
+    public func remove(index: Int, tag: Tag) async {
+        arch
+            .secrets
+            .mutate(index: index) {
+                $0.with(tags: $0
+                            .tags
+                            .removing(tag))
+            }
+        await stream()
+    }
 }

@@ -33,10 +33,37 @@ final class SecretTests: XCTestCase {
         
         XCTAssertEqual("secret name", secret.name)
         XCTAssertEqual("some payload", secret.payload)
-        XCTAssertEqual(date.timestamp, secret.date.timestamp)
         XCTAssertTrue(secret.favourite)
         XCTAssertTrue(secret.tags.contains(.pet))
         XCTAssertTrue(secret.tags.contains(.food))
         XCTAssertTrue(secret.tags.contains(.books))
+    }
+    
+    func testNameDate() {
+        let date = Date.now
+        secret = secret.with(date: .init(timeIntervalSinceNow: -10000))
+        secret = secret.with(name: "lol")
+        XCTAssertGreaterThanOrEqual(secret.date, date)
+    }
+    
+    func testPayloadDate() {
+        let date = Date.now
+        secret = secret.with(date: .init(timeIntervalSinceNow: -10000))
+        secret = secret.with(payload: "asd")
+        XCTAssertGreaterThanOrEqual(secret.date, date)
+    }
+    
+    func testFavouriteDate() {
+        let date = Date.now
+        secret = secret.with(date: .init(timeIntervalSinceNow: -10000))
+        secret = secret.with(favourite: true)
+        XCTAssertGreaterThanOrEqual(secret.date, date)
+    }
+    
+    func testTagsDate() {
+        let date = Date.now
+        secret = secret.with(date: .init(timeIntervalSinceNow: -10000))
+        secret = secret.with(tags: [.books])
+        XCTAssertGreaterThanOrEqual(secret.date, date)
     }
 }

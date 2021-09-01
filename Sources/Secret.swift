@@ -39,22 +39,22 @@ public struct Secret: Storable {
     }
     
     func with(name: String) -> Self {
-        .init(name: name, payload: payload, date: date, favourite: favourite, tags: tags)
+        .init(name: name, payload: payload, date: .init(), favourite: favourite, tags: tags)
     }
     
     func with(payload: String) -> Self {
-        .init(name: name, payload: payload, date: date, favourite: favourite, tags: tags)
-    }
-    
-    func with(date: Date) -> Self {
-        .init(name: name, payload: payload, date: date, favourite: favourite, tags: tags)
+        .init(name: name, payload: payload, date: .init(), favourite: favourite, tags: tags)
     }
     
     func with(favourite: Bool) -> Self {
-        .init(name: name, payload: payload, date: date, favourite: favourite, tags: tags)
+        .init(name: name, payload: payload, date: .init(), favourite: favourite, tags: tags)
     }
     
     func with(tags: Set<Tag>) -> Self {
+        .init(name: name, payload: payload, date: .init(), favourite: favourite, tags: tags)
+    }
+    
+    func with(date: Date) -> Self {
         .init(name: name, payload: payload, date: date, favourite: favourite, tags: tags)
     }
 }
