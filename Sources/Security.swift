@@ -25,7 +25,7 @@ enum Security {
     }
     
     private static var generate: SymmetricKey? {
-        key = SymmetricKey(size: .bits256)
+        key = .init(size: .bits256)
         
         guard
             SecItemAdd([
