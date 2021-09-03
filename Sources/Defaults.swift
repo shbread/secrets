@@ -4,7 +4,8 @@ public enum Defaults: String {
     case
     _rated,
     _created,
-    _onboarded
+    _onboarded,
+    _authenticate
 
     public static var rated: Bool {
         get { self[._rated] as? Bool ?? false }
@@ -19,6 +20,11 @@ public enum Defaults: String {
     public static var onboarded: Bool {
         get { self[._onboarded] as? Bool ?? false }
         set { self[._onboarded] = newValue }
+    }
+    
+    public static var authenticate: Bool {
+        get { self[._authenticate] as? Bool ?? true }
+        set { self[._authenticate] = newValue }
     }
     
     private static subscript(_ key: Self) -> Any? {
