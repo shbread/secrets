@@ -74,4 +74,15 @@ extension Cloud where A == Archive {
             }
         await stream()
     }
+    
+    public func add(purchase: Purchase) async {
+        arch.capacity += purchase.value
+        await stream()
+    }
+    
+    public func remove(purchase: Purchase) async {
+        arch.capacity -= purchase.value
+        arch.capacity = max(arch.capacity, 1)
+        await stream()
+    }
 }

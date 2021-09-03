@@ -143,4 +143,52 @@ final class CloudTests: XCTestCase {
         
         await waitForExpectations(timeout: 1)
     }
+    
+    func testAddPurchase() async {
+        let expect = expectation(description: "")
+        
+        cloud
+            .archive
+            .sink {
+                XCTAssertEqual(6, $0.capacity)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.add(purchase: .five)
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
+    func testRemovePurchase() async {
+        let expect = expectation(description: "")
+        cloud
+            .archive
+            .dropFirst()
+            .sink {
+                XCTAssertEqual(10, $0.capacity)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.add(purchase: .ten)
+        await cloud.remove(purchase: .one)
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
+    func testRemoveNonZero() async {
+        let expect = expectation(description: "")
+        cloud
+            .archive
+            .sink {
+                XCTAssertEqual(1, $0.capacity)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        await cloud.remove(purchase: .ten)
+        
+        await waitForExpectations(timeout: 1)
+    }
 }
