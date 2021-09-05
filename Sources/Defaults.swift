@@ -23,7 +23,7 @@ public enum Defaults: String {
     }
     
     public static var authenticate: Bool {
-        get { self[._authenticate] as? Bool ?? true }
+        get { self[._authenticate] as? Bool ?? false }
         set { self[._authenticate] = newValue }
     }
     
