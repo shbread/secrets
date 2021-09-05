@@ -74,6 +74,19 @@ final class CloudTests: XCTestCase {
         await waitForExpectations(timeout: 1)
     }
     
+    func testUpdateNameSame() async {
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink { _ in
+                XCTFail()
+            }
+            .store(in: &subs)
+        
+        await cloud.update(index: 0, name: "Untitled")
+    }
+    
     func testUpdatePayload() async {
         let expect = expectation(description: "")
         _ = await cloud.new(secret: "hello world")
@@ -89,6 +102,19 @@ final class CloudTests: XCTestCase {
         await cloud.update(index: 0, payload: "lorem ipsum")
         
         await waitForExpectations(timeout: 1)
+    }
+    
+    func testUpdatePayloadSame() async {
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink { _ in
+                XCTFail()
+            }
+            .store(in: &subs)
+        
+        await cloud.update(index: 0, payload: "hello world")
     }
     
     func testUpdateFavourite() async {
@@ -108,6 +134,19 @@ final class CloudTests: XCTestCase {
         await waitForExpectations(timeout: 1)
     }
     
+    func testUpdateFavouriteSame() async {
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink { _ in
+                XCTFail()
+            }
+            .store(in: &subs)
+        
+        await cloud.update(index: 0, favourite: false)
+    }
+    
     func testAddTag() async {
         let expect = expectation(description: "")
         _ = await cloud.new(secret: "hello world")
@@ -123,6 +162,20 @@ final class CloudTests: XCTestCase {
         await cloud.add(index: 0, tag: .books)
         
         await waitForExpectations(timeout: 1)
+    }
+    
+    func testAddTagSame() async {
+        _ = await cloud.new(secret: "hello world")
+        await cloud.add(index: 0, tag: .important)
+        
+        cloud
+            .archive
+            .sink { _ in
+                XCTFail()
+            }
+            .store(in: &subs)
+        
+        await cloud.add(index: 0, tag: .important)
     }
     
     func testRemoveTag() async {
@@ -142,6 +195,19 @@ final class CloudTests: XCTestCase {
         await cloud.remove(index: 0, tag: .books)
         
         await waitForExpectations(timeout: 1)
+    }
+    
+    func testRemoveTagSameNot() async {
+        _ = await cloud.new(secret: "hello world")
+        
+        cloud
+            .archive
+            .sink { _ in
+                XCTFail()
+            }
+            .store(in: &subs)
+        
+        await cloud.remove(index: 0, tag: .important)
     }
     
     func testAddPurchase() async {

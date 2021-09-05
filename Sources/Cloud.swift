@@ -27,6 +27,7 @@ extension Cloud where A == Archive {
     }
     
     public func update(index: Int, name: String) async {
+        guard name != arch.secrets[index].name else { return }
         arch
             .secrets
             .mutate(index: index) {
@@ -36,6 +37,7 @@ extension Cloud where A == Archive {
     }
     
     public func update(index: Int, payload: String) async {
+        guard payload != arch.secrets[index].payload else { return }
         arch
             .secrets
             .mutate(index: index) {
@@ -45,6 +47,7 @@ extension Cloud where A == Archive {
     }
     
     public func update(index: Int, favourite: Bool) async {
+        guard favourite != arch.secrets[index].favourite else { return }
         arch
             .secrets
             .mutate(index: index) {
@@ -54,6 +57,7 @@ extension Cloud where A == Archive {
     }
     
     public func add(index: Int, tag: Tag) async {
+        guard !arch.secrets[index].tags.contains(tag) else { return }
         arch
             .secrets
             .mutate(index: index) {
@@ -65,6 +69,7 @@ extension Cloud where A == Archive {
     }
     
     public func remove(index: Int, tag: Tag) async {
+        guard arch.secrets[index].tags.contains(tag) else { return }
         arch
             .secrets
             .mutate(index: index) {
