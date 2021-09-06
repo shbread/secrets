@@ -31,4 +31,16 @@ final class ArchiveTests: XCTestCase {
         XCTAssertEqual(1, archive.secrets.count)
         XCTAssertEqual("hello", archive.secrets.first?.payload)
     }
+    
+    func testDecryptingFails() async {
+        archive.capacity = 10
+        archive.secrets.append(.new
+                                .with(payload: "hello"))
+        let compressed = await archive.compressed
+        Security.key = .init(size: .bits256)
+        
+        archive = await Archive.prototype(data: compressed)
+        XCTAssertTrue(archive.secrets.isEmpty)
+        XCTAssertEqual(1, archive.capacity)
+    }
 }

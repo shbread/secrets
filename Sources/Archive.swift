@@ -30,6 +30,14 @@ public struct Archive: Arch {
     
     public init(version: UInt8, timestamp: UInt32, data: Data) async {
         var data = await data.decrypted
+        
+        guard !data.isEmpty else {
+            self.timestamp = 0
+            secrets = []
+            capacity = 1
+            return
+        }
+        
         self.timestamp = timestamp
         secrets = []
         capacity = .init(data.uInt16())
