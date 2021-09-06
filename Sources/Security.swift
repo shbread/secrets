@@ -1,7 +1,7 @@
 import Foundation
 import CryptoKit
 
-private let account = "Secrets.Archive.v1"
+private let account = "Secrets"
 
 enum Security {
     static var key: SymmetricKey?
