@@ -43,4 +43,10 @@ final class ArchiveTests: XCTestCase {
         XCTAssertTrue(archive.secrets.isEmpty)
         XCTAssertEqual(1, archive.capacity)
     }
+    
+    func testInvalidIndex() async {
+        XCTAssertEqual(.new, archive[1])
+        XCTAssertEqual(.new, archive[0])
+        XCTAssertEqual(.new, archive[2])
+    }
 }

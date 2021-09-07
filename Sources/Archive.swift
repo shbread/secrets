@@ -5,11 +5,15 @@ public struct Archive: Arch {
     public static let version = UInt8()
     public static let new = Self()
     public var timestamp: UInt32
-    public internal(set) var secrets: [Secret]
     public internal(set) var capacity: Int
+    var secrets: [Secret]
     
     public var available: Bool {
-        secrets.count < capacity
+        count < capacity
+    }
+    
+    public var count: Int {
+        secrets.count
     }
     
     public var data: Data {
@@ -26,6 +30,12 @@ public struct Archive: Arch {
         timestamp = 0
         secrets = []
         capacity = 1
+    }
+    
+    public subscript(_ index: Int) -> Secret {
+        secrets.count > index
+        ? secrets[index]
+        : .new
     }
     
     public init(version: UInt8, timestamp: UInt32, data: Data) async {
