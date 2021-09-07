@@ -8,10 +8,6 @@ final class SecretTests: XCTestCase {
         secret = .new
     }
     
-    func testName() {
-        XCTAssertEqual("Untitled", secret.name)
-    }
-    
     func testFavourite() {
         XCTAssertFalse(secret.favourite)
     }

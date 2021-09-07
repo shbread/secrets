@@ -21,8 +21,8 @@ final class CloudTests: XCTestCase {
             .dropFirst()
             .sink {
                 XCTAssertEqual(2, $0.secrets.count)
-                XCTAssertEqual("hello world", $0.secrets.first?.payload)
-                XCTAssertEqual("lorem ipsum", $0.secrets.last?.payload)
+                XCTAssertEqual("hello world", $0.secrets.first?.name)
+                XCTAssertEqual("lorem ipsum", $0.secrets.last?.name)
                 XCTAssertGreaterThanOrEqual($0.timestamp, date.timestamp)
                 XCTAssertGreaterThanOrEqual($0.secrets.first?.date.timestamp ?? 0, date.timestamp)
                 XCTAssertGreaterThanOrEqual($0.secrets.last?.date.timestamp ?? 0, date.timestamp)
@@ -40,9 +40,25 @@ final class CloudTests: XCTestCase {
         await waitForExpectations(timeout: 1)
     }
     
+    func testNewEmptyName() async {
+        let expect = expectation(description: "")
+        
+        cloud
+            .archive
+            .sink {
+                XCTAssertEqual("Untitled", $0.secrets.first?.name)
+                expect.fulfill()
+            }
+            .store(in: &subs)
+        
+        _ = await cloud.new(secret: " ")
+        
+        await waitForExpectations(timeout: 1)
+    }
+    
     func testDelete() async {
         let expect = expectation(description: "")
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         
         cloud
             .archive
@@ -84,12 +100,12 @@ final class CloudTests: XCTestCase {
             }
             .store(in: &subs)
         
-        await cloud.update(index: 0, name: "Untitled")
+        await cloud.update(index: 0, name: "hello world")
     }
     
     func testUpdatePayload() async {
         let expect = expectation(description: "")
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         
         cloud
             .archive
@@ -105,7 +121,8 @@ final class CloudTests: XCTestCase {
     }
     
     func testUpdatePayloadSame() async {
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
+        await cloud.update(index: 0, payload: "hello world")
         
         cloud
             .archive
@@ -119,7 +136,7 @@ final class CloudTests: XCTestCase {
     
     func testUpdateFavourite() async {
         let expect = expectation(description: "")
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         
         cloud
             .archive
@@ -135,7 +152,7 @@ final class CloudTests: XCTestCase {
     }
     
     func testUpdateFavouriteSame() async {
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         
         cloud
             .archive
@@ -149,7 +166,7 @@ final class CloudTests: XCTestCase {
     
     func testAddTag() async {
         let expect = expectation(description: "")
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         
         cloud
             .archive
@@ -165,7 +182,7 @@ final class CloudTests: XCTestCase {
     }
     
     func testAddTagSame() async {
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         await cloud.add(index: 0, tag: .important)
         
         cloud
@@ -180,7 +197,7 @@ final class CloudTests: XCTestCase {
     
     func testRemoveTag() async {
         let expect = expectation(description: "")
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         
         cloud
             .archive
@@ -198,7 +215,7 @@ final class CloudTests: XCTestCase {
     }
     
     func testRemoveTagSameNot() async {
-        _ = await cloud.new(secret: "hello world")
+        _ = await cloud.new(secret: "")
         
         cloud
             .archive

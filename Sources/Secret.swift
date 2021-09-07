@@ -2,7 +2,7 @@ import Foundation
 import Archivable
 
 public struct Secret: Storable {
-    public static let new = Secret(name: "Untitled", payload: "", date: .now, favourite: false, tags: [])
+    public static let new = Secret(name: "", payload: "", date: .now, favourite: false, tags: [])
     public let name: String
     public let payload: String
     public let date: Date
