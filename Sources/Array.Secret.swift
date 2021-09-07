@@ -1,7 +1,7 @@
 import Foundation
 
 extension Array where Element == Secret {
-    public func filter(favourites: Bool, search: String) -> [Int] {
+    func filter(favourites: Bool, search: String) -> [Int] {
         enumerated()
             .filter {
                 favourites

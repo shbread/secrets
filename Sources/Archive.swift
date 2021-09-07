@@ -56,4 +56,8 @@ public struct Archive: Arch {
                 .init(data: &data)
             }
     }
+    
+    public func filter(favourites: Bool, search: String) -> [Int] {
+        secrets.filter(favourites: favourites, search: search)
+    }
 }
