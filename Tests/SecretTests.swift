@@ -62,4 +62,20 @@ final class SecretTests: XCTestCase {
         secret = secret.with(tags: [.books])
         XCTAssertGreaterThanOrEqual(secret.date, date)
     }
+    
+    func testFilter() {
+        let array = [Secret.new
+                        .with(name: "hello world")
+                        .with(favourite: true),
+                     .new
+                        .with(name: "hello world 2"),
+                     .new
+                        .with(name: "lorem ipsum")
+                        .with(favourite: true)]
+        XCTAssertEqual([0, 1, 2], array.filter(favourites: false, search: ""))
+        XCTAssertEqual([], array.filter(favourites: false, search: "alpha"))
+        XCTAssertEqual([], array.filter(favourites: true, search: "2"))
+        XCTAssertEqual([0, 2], array.filter(favourites: true, search: "e"))
+        XCTAssertEqual([0, 1], array.filter(favourites: false, search: "hello"))
+    }
 }
