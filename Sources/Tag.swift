@@ -26,7 +26,9 @@ public enum Tag: UInt8, CaseIterable, Comparable {
     codes,
     passwords,
     numbers,
-    keys
+    keys,
+    cook,
+    tools
     
     public static func < (lhs: Self, rhs: Self) -> Bool {
         "\(lhs)".localizedCompare("\(rhs)") == .orderedAscending

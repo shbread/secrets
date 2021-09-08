@@ -6,9 +6,9 @@ public enum Defaults: String {
     _created,
     _onboarded,
     _authenticate,
+    _tools,
     _spell,
-    _correction,
-    _tools
+    _correction
 
     public static var rated: Bool {
         get { self[._rated] as? Bool ?? false }
