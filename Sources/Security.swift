@@ -8,18 +8,18 @@ enum Security {
     static var key: SymmetricKey?
     
     private static var retrieve: SymmetricKey? {
-        let query = [
-            kSecClass: kSecClassGenericPassword,
-            kSecAttrAccount: account,
-            kSecAttrService: service,
-            kSecUseDataProtectionKeychain: true,
-            kSecAttrSynchronizable: kSecAttrSynchronizableAny,
-            kSecReturnData: true] as [String: Any]
-
         var item: CFTypeRef?
         
         guard
-            SecItemCopyMatching(query as CFDictionary, &item) == errSecSuccess,
+            
+            SecItemCopyMatching(([
+                kSecClass: kSecClassGenericPassword,
+                kSecAttrAccount: account,
+                kSecAttrService: service,
+                kSecUseDataProtectionKeychain: true,
+                kSecAttrSynchronizable: kSecAttrSynchronizableAny,
+                kSecReturnData: true] as [String: Any]) as CFDictionary, &item) == errSecSuccess,
+            
             let data = item as? Data
         else { return nil }
         
@@ -31,6 +31,7 @@ enum Security {
         key = .init(size: .bits256)
         
         guard
+            
             SecItemAdd([
                 kSecClass: kSecClassGenericPassword,
                 kSecAttrAccount: account,
