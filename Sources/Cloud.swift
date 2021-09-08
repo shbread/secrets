@@ -9,14 +9,12 @@ extension Cloud where A == Archive {
         return cloud
     }
     
-    public func new(secret name: String) async -> Int {
+    public func secret() async -> Int {
         arch
             .secrets
             .append(
                 .new
-                    .with(name: {
-                        $0.isEmpty ? "Untitled" : $0
-                    } (name.trimmingCharacters(in: .whitespacesAndNewlines))))
+                    .with(name: "Untitled"))
         await stream()
         return arch.secrets.count - 1
     }
