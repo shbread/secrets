@@ -11,6 +11,7 @@ enum Security {
             kSecClass: kSecClassGenericPassword,
             kSecAttrAccount: account,
             kSecUseDataProtectionKeychain: true,
+            kSecAttrSynchronizable: true,
             kSecReturnData: true] as [String: Any]
 
         var item: CFTypeRef?
@@ -33,6 +34,7 @@ enum Security {
                 kSecAttrAccount: account,
                 kSecAttrAccessible: kSecAttrAccessibleWhenUnlocked,
                 kSecUseDataProtectionKeychain: true,
+                kSecAttrSynchronizable: true,
                 kSecValueData: key!
                     .withUnsafeBytes {
                         Data($0)
