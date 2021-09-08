@@ -1,7 +1,8 @@
 import Foundation
 import CryptoKit
 
-private let label = "Secrets"
+private let account = "Secrets"
+private let service = "Protection"
 
 enum Security {
     static var key: SymmetricKey?
@@ -9,7 +10,8 @@ enum Security {
     private static var retrieve: SymmetricKey? {
         let query = [
             kSecClass: kSecClassGenericPassword,
-            kSecAttrLabel: label,
+            kSecAttrAccount: account,
+            kSecAttrService: service,
             kSecUseDataProtectionKeychain: true,
             kSecAttrSynchronizable: true,
             kSecReturnData: true] as [String: Any]
@@ -31,7 +33,8 @@ enum Security {
         guard
             SecItemAdd([
                 kSecClass: kSecClassGenericPassword,
-                kSecAttrLabel: label,
+                kSecAttrAccount: account,
+                kSecAttrService: service,
                 kSecUseDataProtectionKeychain: true,
                 kSecAttrSynchronizable: true,
                 kSecValueData: key!
