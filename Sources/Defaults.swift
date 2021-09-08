@@ -30,6 +30,11 @@ public enum Defaults: String {
         set { self[._authenticate] = newValue }
     }
     
+    public static var tools: Bool {
+        get { self[._tools] as? Bool ?? true }
+        set { self[._tools] = newValue }
+    }
+    
     public static var spell: Bool {
         get { self[._spell] as? Bool ?? true }
         set { self[._spell] = newValue }
@@ -38,11 +43,6 @@ public enum Defaults: String {
     public static var correction: Bool {
         get { self[._correction] as? Bool ?? false }
         set { self[._correction] = newValue }
-    }
-    
-    public static var tools: Bool {
-        get { self[._tools] as? Bool ?? true }
-        set { self[._tools] = newValue }
     }
     
     private static subscript(_ key: Self) -> Any? {
