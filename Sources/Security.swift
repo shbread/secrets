@@ -13,7 +13,7 @@ enum Security {
             kSecAttrAccount: account,
             kSecAttrService: service,
             kSecUseDataProtectionKeychain: true,
-            kSecAttrSynchronizable: true,
+            kSecAttrSynchronizable: kSecAttrSynchronizableAny,
             kSecReturnData: true] as [String: Any]
 
         var item: CFTypeRef?
